@@ -101,7 +101,7 @@ func getSTSCredentials(cfg *config) (creds *sts.Credentials, err error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Fprint(os.Stdout, "\nread token %q\n", token)
+	fmt.Fprintf(os.Stdout, "\nread token %q\n", token)
 	code := strconv.Itoa(token)
 	tokenRes, err := stsClient.GetSessionToken(&sts.GetSessionTokenInput{SerialNumber: d.SerialNumber, DurationSeconds: &d64, TokenCode: &code})
 	if err != nil {
