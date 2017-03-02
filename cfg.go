@@ -114,12 +114,15 @@ func getSTSCredentials(cfg *config) (creds *sts.Credentials, err error) {
 	return creds, nil
 }
 
-var ReadTokenDeadline = 60 * time.Second
+var insertMsg = "insert your yubikey please"
 
 func readToken(cfg *config) (string, error) {
-	ctx, cf := context.WithTimeout(context.Background(), 5*time.Minute)
-	defer cf()
 	if k := cfg.AWSYubikey; k != "" {
+		ctx, cf := context.WithCancel(context.Background())
+		defer cf()
+		if _, err := exec.LookPath("dmenu"); err == nil {
+			exec.CommandContext(ctx, "dmenu", "-p", insertMsg).Start()
+		}
 		key, ok, err := readKeyFromYubi(ctx, k)
 		if err != nil {
 			return "", err
@@ -165,7 +168,7 @@ func loadKeysFromYubi(ctx context.Context) (yubiauth.Keys, error) {
 	} else if found {
 		return keys, nil
 	}
-	fmt.Fprintf(os.Stderr, "please insert your yubikey")
+	fmt.Fprintf(os.Stderr, insertMsg)
 	keys, err = yubiauth.WaitForKeys(ctx)
 	if err != nil {
 		if err != context.DeadlineExceeded {
@@ -174,6 +177,7 @@ func loadKeysFromYubi(ctx context.Context) (yubiauth.Keys, error) {
 			io.WriteString(os.Stderr, "\n")
 		}
 	}
+	fmt.Fprintf(os.Stderr, "\nloaded mfa tokens\n")
 	return keys, nil
 }
 
