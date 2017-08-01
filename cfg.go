@@ -124,10 +124,10 @@ func readToken(cfg *config) (string, error) {
 			exec.CommandContext(ctx, "dmenu", "-p", insertMsg).Start()
 		}
 		key, ok, err := readKeyFromYubi(ctx, k)
-		if err != nil {
-			return "", err
-		} else if ok {
+		if ok {
 			return key, nil
+		} else if err != nil {
+			log.Printf("error loading key from yubioath: %s", err)
 		}
 	}
 	return readMFAToken(cfg.AWSAccountName, os.Stdin)
