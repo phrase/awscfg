@@ -21,7 +21,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/aws/aws-sdk-go/service/sts"
-	"github.com/phrase/yubiauth"
+	"github.com/phrase/yubioath"
 )
 
 func NewFromPath(path string) (*aws.Config, error) {
