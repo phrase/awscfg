@@ -169,7 +169,7 @@ func loadKeysFromYubi(ctx context.Context) (yubiauth.Keys, error) {
 		return keys, nil
 	}
 	fmt.Fprintf(os.Stderr, insertMsg)
-	keys, err = yubiauth.WaitForKeys(ctx)
+	keys, err = yubioath.WaitForKeys(ctx)
 	if err != nil {
 		if err != context.DeadlineExceeded {
 			log.Printf("err=%q", err)
