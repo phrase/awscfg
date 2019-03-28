@@ -161,15 +161,9 @@ func readKeyFromYubi(ctx context.Context, key string) (string, bool, error) {
 	return v, ok, nil
 }
 
-func loadKeysFromYubi(ctx context.Context) (yubiauth.Keys, error) {
-	keys, found, err := yubiauth.ReadYubioath()
-	if err != nil {
-		return nil, err
-	} else if found {
-		return keys, nil
-	}
+func loadKeysFromYubi(ctx context.Context) (yubioath.Keys, error) {
 	fmt.Fprintf(os.Stderr, insertMsg)
-	keys, err = yubioath.WaitForKeys(ctx)
+	keys, err := yubioath.WaitForKeys(ctx)
 	if err != nil {
 		if err != context.DeadlineExceeded {
 			log.Printf("err=%q", err)
